@@ -231,7 +231,7 @@ int main(int argc, char* argv[]){
     Node* built = buildTree(arr, &index);
 
     preOrder(out1, built); 
-    //part2(out2, built);
+    part2(out2, built);
     part3(out3, built);
     print_part3(out3, built);
   //  printf("part three:\n");
