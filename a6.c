@@ -22,7 +22,11 @@ Node* newNodeSplit(NodeType type, char letter) {
     if(node->type == split) { 
     node->data.splitData.splitChar = letter;
     }
-
+     node->data.pointData.height=0;
+     node->data.pointData.width=0;
+     node->data.pointData.x=0;
+     node->data.pointData.y=0;
+     node->data.pointData.number=letter;
     node->left = node->right = NULL;
 
     return node;
@@ -136,7 +140,7 @@ void preOrder(FILE* file, Node* root) {
     //preOrderList[(*index)++] = root->data.pointData;
    if(root->type == split){
     fprintf(file,"%c\n",root->data.splitData.splitChar);
-    printf("%c\n",root->data.splitData.splitChar);
+    //printf("%c\n",root->data.splitData.splitChar);
    }
    else{ 
     fprintf(file,"%d(%d,%d)\n", root->data.pointData.number, root->data.pointData.width, root->data.pointData.height);
