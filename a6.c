@@ -12,6 +12,7 @@ Node* newNodePoint(NodeType type, int num, int x, int y) {
     node->data.pointData.number = num;
     node->data.pointData.x = 0; 
     node->data.pointData.y = 0; 
+    node->data.splitData.splitChar=num;
     node->type = point;
     node->left = node->right = NULL;
     return node;
