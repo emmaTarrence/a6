@@ -5,6 +5,31 @@
 #include <string.h>
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+ListNode* newListNode(Node node) { 
+    ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));
+    if(newNode) { 
+        newNode->node = node; 
+        newNode->next = NULL;
+    }
+    return newNode;
+}
+
+void push(ListNode** head, Node node) { 
+    ListNode* newNode = newListNode(node);
+    newNode->next = *head;
+    *head = newNode;
+}
+
+Node pop(ListNode** head) { 
+    if(*head == NULL) { 
+        exit(1);
+    }
+    ListNode* temp = *head; 
+    Node node = temp->node; 
+    *head = (*head)->next;
+    free(temp);
+    return node;
+}
 Node* newNodePoint(NodeType type, int num, int x, int y) {
     Node* node = (Node*)malloc(sizeof(Node));
     node->data.pointData.width = x;
@@ -33,19 +58,18 @@ Node* newNodeSplit(NodeType type, char letter) {
     return node;
 }
 
-Node* buildTree(Node* postOrder, int* postIndex) {
-    if (*postIndex < 0) {
+Node* buildTree(ListNode** list) {
+    if (*list == NULL) {
         return NULL;
     }
-    Node currentNode = postOrder[*postIndex];
-    (*postIndex)--;  
-
+    Node currentNode = pop(list);
     Node* root = NULL;
+
     if (currentNode.type == split) {
         root = newNodeSplit(currentNode.type, currentNode.data.splitData.splitChar);
        // printf("%c",currentNode.data.splitData.splitChar);
-        root->right = buildTree(postOrder, postIndex);
-        root->left = buildTree(postOrder, postIndex);
+        root->right = buildTree(list);
+        root->left = buildTree(list);
     } else {
         root = newNodePoint(currentNode.type, currentNode.data.pointData.number, 
                currentNode.data.pointData.width, currentNode.data.pointData.height);
@@ -188,8 +212,9 @@ int main(int argc, char* argv[]){
     FILE* out2 = fopen(argv[3], "w");
     FILE* out3 = fopen(argv[4], "w");
 
-   Node arr[filelength(file)];
-    int i = 0; 
+    ListNode* list = NULL; 
+    int i = 0;
+
     if (file == NULL) {
         perror("Failed to open file");
         return 1;
@@ -204,32 +229,32 @@ int main(int argc, char* argv[]){
             newNode.data.pointData.width = x;
             newNode.data.pointData.height = y; 
             newNode.data.pointData.number = weight; 
-            arr[i]=newNode; 
+            push(&list,newNode); 
         }        
         if((strcmp(val, "H")==0)||(strcmp(val, "H\n")==0)){
 
             struct Node hNode; 
             hNode.type = split;
             hNode.data.splitData.splitChar = 'H'; 
-            arr[i] = hNode;
+            push(&list,hNode);
         }
         if((strcmp(val, "V")==0)||(strcmp(val, "V\n")==0)){
             struct Node vNode; 
             vNode.type = split;
             vNode.data.splitData.splitChar = 'V'; 
-            arr[i] = vNode;
+            push(&list,vNode);
         }
         i++;
          }
-         int tempi = i;
-         for(;i>0; i--){
+        // int tempi = i;
+         //for(;i>0; i--){
             
-         }
+         //}
         // for (int j = 0; j < tempi; j++) {
       //  printf("arr[%d] = %d\n", j, arr[j].type);
     //}
-    int index = tempi -1;  
-    Node* built = buildTree(arr, &index);
+    //int index = tempi -1;  
+    Node* built = buildTree(&list);
 
     preOrder(out1, built); 
     part2(out2, built);

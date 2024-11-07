@@ -27,4 +27,9 @@ struct Node* left;
 struct Node* right; 
 }Node;
 
+typedef struct ListNode {
+    Node node;
+    struct ListNode* next;
+} ListNode;
+
 #endif // A6
