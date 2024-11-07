@@ -18,15 +18,13 @@ Node* newNodePoint(NodeType type, int num, int x, int y) {
 }
 Node* newNodeSplit(NodeType type, char letter) {
     Node* node = (Node*)malloc(sizeof(Node));
-    node->type = split;
+    node->type = type;
+    if(node->type == split) { 
     node->data.splitData.splitChar = letter;
-    node->data.pointData.height=0;
-    node->data.pointData.width=0;
-    node->data.pointData.x=0;
-    node->data.pointData.y=0;
-    node->data.pointData.number=0;
+    }
+
     node->left = node->right = NULL;
-    //printf("%c", node->data.splitData.splitChar);
+
     return node;
 }
 
@@ -40,12 +38,12 @@ Node* buildTree(Node* postOrder, int* postIndex) {
     Node* root = NULL;
     if (currentNode.type == split) {
         root = newNodeSplit(currentNode.type, currentNode.data.splitData.splitChar);
-
+       // printf("%c",currentNode.data.splitData.splitChar);
         root->right = buildTree(postOrder, postIndex);
         root->left = buildTree(postOrder, postIndex);
     } else {
         root = newNodePoint(currentNode.type, currentNode.data.pointData.number, 
-                            currentNode.data.pointData.width, currentNode.data.pointData.height);
+               currentNode.data.pointData.width, currentNode.data.pointData.height);
     }
     return root;
 }
@@ -138,6 +136,7 @@ void preOrder(FILE* file, Node* root) {
     //preOrderList[(*index)++] = root->data.pointData;
    if(root->type == split){
     fprintf(file,"%c\n",root->data.splitData.splitChar);
+    printf("%c\n",root->data.splitData.splitChar);
    }
    else{ 
     fprintf(file,"%d(%d,%d)\n", root->data.pointData.number, root->data.pointData.width, root->data.pointData.height);
